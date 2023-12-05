@@ -4,7 +4,7 @@ import ReceiptAnalyzer from './ReceiptAnalyzer';
 function App() {
   return (
     <div className="App">
-      <h1>Form Recognizer</h1>
+      <h1>Prescription </h1>
       <ReceiptAnalyzer />
     </div>
   );
