@@ -1,10 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
 
+import Login from './components/Login';
+
+
 function App() {
+  let checked = true;
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="App" >
+      {/* <Grow
+      style={{ transformOrigin: '0 0 0' }}
+      {...(checked ? { timeout: 1000 } : {})}>
+        <Typography variant="h1" component="h2">
+          Welcome To MediFind
+        </Typography>
+      </Grow> */}
+      
+      <Login />
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -17,7 +29,7 @@ function App() {
         >
           Learn React
         </a>
-      </header>
+      </header> */}
     </div>
   );
 }

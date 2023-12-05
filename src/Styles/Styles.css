@@ -1,0 +1,46 @@
+.row{
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    
+}
+
+.activeColor{
+    padding-top: 5px;
+    height: 30px;
+    width: fit-content;
+    border: 2px solid #2ABBA7;
+    cursor: pointer;
+}
+
+.pointer{
+    padding-top: 5px;
+    height: 30px;
+    width: fit-content;
+    cursor: pointer;
+}
+
+/* .splitScreen{
+    display: flex;
+    flex-direction: row;
+} */
+.splitScreen {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+/* .topPane{
+    width: 50%,
+} */
+.topPane {
+    grid-column: 1;
+    grid-row: 1;
+}
+/* .bottomPane{
+    width: 50%,
+} */
+.bottomPane {
+    grid-column: 2;
+    grid-row: 1;
+}
