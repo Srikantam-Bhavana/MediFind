@@ -56,6 +56,7 @@ const ReceiptAnalyzer = () => {
           // {description}
           // </div>
         )}
+        <Button>Submit</Button>
         </ThemeProvider>
       </div>
   );
