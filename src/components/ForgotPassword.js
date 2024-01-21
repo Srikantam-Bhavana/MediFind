@@ -7,11 +7,12 @@ import Button from '@mui/material/Button';
 
 const ForgotPassword = () => {
 
+
     const history = useNavigate();
 
     const handleSubmit = async(e) =>{
         e.preventDefault();
-        const emailval = e.target.email.value;
+        let emailval =  e.target.email.value;
         sendPasswordResetEmail(database, emailval).then(data =>{
             alert("check your registered email inbox to reset the password")
         }).catch(err =>{
@@ -23,11 +24,13 @@ const ForgotPassword = () => {
     return (
         <div className='App' style={{ margin: 10 }}>
             <h2>ForgotPassword</h2>
-            <FormControl onSubmit = {(e) => handleSubmit(e)}>
-                <InputLabel>Email Id</InputLabel>
-                <Input name = 'email'/> <br/><br/>
-                <Button variant="contained">Reset</Button>
-            </FormControl>
+            <form onSubmit={(e) => handleSubmit(e)}>
+                <FormControl>
+                    <InputLabel>Email Id</InputLabel>
+                    <Input name = "email" type = "email" placeholder='Email Id'/> <br/><br/>
+                    <Button variant="contained" type="submit">Reset</Button>
+                </FormControl>
+            </form>
         </div>
     )
 }

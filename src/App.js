@@ -4,7 +4,7 @@ import Login from './components/Login';
 
 
 function App() {
-  let checked = true;
+  // let checked = true;
   return (
     <div className="App" >
       {/* <Grow

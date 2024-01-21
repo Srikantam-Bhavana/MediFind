@@ -3,7 +3,7 @@ import { database } from '../firebaseConfig';
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth'
 import { useNavigate } from 'react-router-dom';
 import '../Styles/Styles.css';
-import { FormControl, InputLabel, Input } from '@mui/material';
+import { FormControl, Input } from '@mui/material';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { Typography } from '@mui/material';
@@ -28,15 +28,18 @@ const RegisterAndLogin = () => {
         if(type === 'SignUp'){
             createUserWithEmailAndPassword(database, email, password).then(data =>{
                 console.log(data, "authData");
-                history("/home");
+                history("/disclaimer");
             }).catch(err =>{
+                console.log(err.code);
                 alert(err.code)
-                setLogin(true)
+                if(err.code === "auth/email-already-in-use"){
+                    setLogin(true);
+                }
             })
         }else{
             signInWithEmailAndPassword(database, email, password).then(data =>{
                 console.log(data, "authData");
-                history("/home");
+                history("/disclaimer");
             }).catch(err =>{
                 alert(err.code)
             })
@@ -51,9 +54,10 @@ const RegisterAndLogin = () => {
   return (
     <div className='App' style={{margin:30, justifyContent:'center'}}>
     <Grow in= {true} timeout={5000} sx={{padding: 0, margin: 0}}> 
-          <img src= {logo}
-              height={250} 
-              width={250} 
+          <img  src= {logo}
+                alt = "medifind logo"
+                height={250} 
+                width={250} 
           /> 
       </Grow>
         <form onSubmit={(e) => handleSubmit(e, login? "SignIn":"SignUp")} >
