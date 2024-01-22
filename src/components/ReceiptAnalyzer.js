@@ -12,7 +12,7 @@ import Navbar from './Navbar'
 const ReceiptAnalyzer = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [prescribedItems, setprescribedItems] = useState([]);
-  const [checkedItems, setCheckedItems] = useState([]);
+  const [checkedOptions, setCheckedOptions] = useState([]);
   const [submit, setSubmit] = useState(false)
   const [analyze, setAnalyze] = useState(false)
   const alt = [{
@@ -53,16 +53,25 @@ const ReceiptAnalyzer = () => {
     }
   };
 
-  const getGenericMedicines = async () =>{
-    if(!checkedItems){
-      
+  const handleChange = (e) =>{
+    const { value, checked } = e.target;
+    console.log(e.target);
+    if (checked) {
+      setCheckedOptions([...checkedOptions, value]);
+    } else {
+      setCheckedOptions(checkedOptions.filter((option) => option !== value));
     }
-    axios.post()
-  }
+  };
 
-  const handleSubmit = (e) =>{
+  const handleSubmit = async (e) =>{
     e.preventDefault();
     setSubmit(true);
+    console.log(checkedOptions);
+    const obj = {
+      "medicine": checkedOptions,
+    };
+    const response = await axios.post("/api/searchAlternativesFromPrescription", obj);
+    console.log(response)
     setAlternativesFound(3);
     console.log(submit)
   }
@@ -82,11 +91,14 @@ const ReceiptAnalyzer = () => {
                 <Typography color='primary' variant='h5' style={{padding:'2%'}}>Choose medicines to find generic alternatives and submit: </Typography>
                   {prescribedItems.map((description, index) => (
                     <FormGroup>
-                      <FormControlLabel control={<Checkbox Checked />} label={description} value={description} onChange={() => setCheckedItems([...checkedItems, description])}/>
+                      <FormControlLabel 
+                      control={<Checkbox checked={checkedOptions.includes(description)}/>} 
+                      label={description} 
+                      value={description} 
+                      onChange={handleChange}/>
                     </FormGroup>
                   ))}
                   <Button type='submit' variant="contained">Submit</Button>
-                  {/* <p> checked items: {checkedItems.join(", ")}</p> */}
                   </form>
               </div> )             
              : (analyze ? 
@@ -99,7 +111,7 @@ const ReceiptAnalyzer = () => {
             <div>
               <Typography color='primary' variant='h5' style={{padding:'2%'}}>Suitable Generic Alternatives found: </Typography>
               <GenericMedicines props = {alt}/>
-            </div>: "nothing to show"}
+            </div>: "generic medicines are displayed here"}
       </div>
       </ThemeProvider>
   );
