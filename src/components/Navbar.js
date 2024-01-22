@@ -12,7 +12,7 @@ import theme from '../Styles/colorTheme';
 import { ThemeProvider } from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { database } from '../firebaseConfig';
 
@@ -96,7 +96,11 @@ function Navbar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography color='primary' textAlign="center">{page}</Typography>
+                  <NavLink style={{ textDecoration: 'none' }} to={`/${page}`}>
+                    <Typography color='primary' textAlign="center">
+                    {page}
+                    </Typography>
+                  </NavLink>                  
                 </MenuItem>
               ))}
             </Menu>
@@ -128,7 +132,11 @@ function Navbar() {
                 sx={{ my: 2, color: 'white', display: 'block' }}
                 color='primary'
               >
-                {page}
+                <NavLink style={{ textDecoration: 'none' }}  to={`/${page}`}>
+                  <Typography color='white' textAlign="center">
+                    {page}
+                  </Typography>
+                </NavLink>
               </Button>
             ))}
           </Box>

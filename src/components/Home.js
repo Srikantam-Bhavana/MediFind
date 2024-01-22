@@ -1,33 +1,21 @@
 import React from 'react'
 import Navbar from './Navbar'
 import '../Styles/Styles.css'
-import {Button, Typography, Input, FormControl} from '@mui/material'
+import {Typography} from '@mui/material'
 import theme from '../Styles/colorTheme'
 import { ThemeProvider } from '@emotion/react'
 import Zoom from '@mui/material/Zoom';
-import ReceiptAnalyzer from './ReceiptAnalyzer'
-
-const TextBoxStyle = {
-    display: "flex",
-    flexDirection: "row",
-    paddingTop: "3%",
-    paddingLeft:"20%"
-  };
-
-const ButtonStyle = {
-    paddingTop: "2%"
-} 
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import { useNavigate } from 'react-router-dom';
+import { Button, CardActionArea, CardActions } from '@mui/material';
+import PrescriptionImg from '../prescription.jpg';
+import SearchImg from '../searchImage.jpg';
+ 
 const Home = () => {
-    const [textBoxValue, setTextBoxValue] = React.useState();
-    const handleSearch = (e) => {
-        //post
-        e.preventDefault();
-        console.log(textBoxValue);
-        // axios.post("",textBoxValue)
-        // .then((res) => {
-        //     console.log(res);
-        // })
-    }
+    const history = useNavigate()
+
     return (
         <div>
             <Navbar/>
@@ -40,8 +28,28 @@ const Home = () => {
                     </Typography>
                 </Zoom>
 
-                <div style={{justifyItems:'center', justifyContent:'center', padding:'5%'}}>
-                    <ReceiptAnalyzer/>
+                <div style={{justifyItems:'center', justifyContent:'center', paddingLeft:"20%", paddingTop:"5%"}}>
+                    {/* <ReceiptAnalyzer/> */}
+                    <Card sx={{ maxWidth: 345 }}>
+                    <CardActionArea>
+                        <CardMedia
+                        component="img"
+                        height="140"
+                        image={PrescriptionImg}
+                        alt="prescription"
+                        />
+                        <CardContent>
+                        <Typography variant="body2" color="text.primary">
+                            Please Upload The Printed Prescription given by the doctor.
+                        </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                        <Button size="small" color="primary" onClick={() => history("/uploadPrescription")}>
+                        Upload
+                        </Button>
+                    </CardActions>
+                    </Card>
                 </div>
                     
                 </div>
@@ -51,16 +59,30 @@ const Home = () => {
                             Search Medicines
                         </Typography>
                     </Zoom>
-                    <form onSubmit={(e) => handleSearch(e)}>
-                        <FormControl>
-                        <div style={TextBoxStyle}>
-                            <Input name = "Search" type = "text" placeholder='Enter you input' onChange={(e) => setTextBoxValue(e.target.value)}/><br/>
-                            <div style={ButtonStyle}>
-                                <Button variant="contained" type="submit">Search</Button>
-                            </div> 
-                        </div>
-                        </FormControl>
-                    </form>  
+                     
+                    <div style={{justifyItems:'center', justifyContent:'center', paddingLeft:"20%", paddingTop:"5%"}}>
+                        {/* <SearchMedicines/> */}
+                        <Card sx={{ maxWidth: 345 }}>
+                    <CardActionArea>
+                        <CardMedia
+                        component="img"
+                        height="140"
+                        image={SearchImg}
+                        alt="search medicine"
+                        />
+                        <CardContent>
+                        <Typography variant="body2" color="text.primary">
+                            Please type your medicine name in the search bar carefully.
+                        </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                        <Button size="small" color="primary" onClick={() => history("/searchMedicine")}>
+                        Search
+                        </Button>
+                    </CardActions>
+                    </Card>
+                    </div>
                 </div>
             </div>
             </ThemeProvider>

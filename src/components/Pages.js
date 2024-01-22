@@ -4,8 +4,10 @@ import RegisterAndLogin from './RegisterAndLogin'
 import Home from './Home'
 import ForgotPassword from './ForgotPassword'
 import Disclaimer from './Disclaimer'
+import ReceiptAnalyzer from './ReceiptAnalyzer'
+import SearchMedicines from './SearchMedicines'
 
-const Login = () => {
+const Pages = () => {
   return (
     <BrowserRouter>
         <div>
@@ -14,10 +16,14 @@ const Login = () => {
                 <Route path = "/home" element = {<Home/>}/>
                 <Route path = "/reset" element = {<ForgotPassword/>}/>
                 <Route path = "/disclaimer" element = {<Disclaimer/>}/>
+                <Route path = "/uploadPrescription" element={<ReceiptAnalyzer/>}/>
+                <Route path = "/searchMedicine" element={<SearchMedicines/>}/>
+                <Route path = "/Feedback" element={<Home/>}/>
+                <Route path = "/History" element={<Home/>}/>
             </Routes>
         </div>
     </BrowserRouter> 
   )
 }
 
-export default Login
+export default Pages
