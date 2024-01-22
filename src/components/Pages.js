@@ -6,6 +6,7 @@ import ForgotPassword from './ForgotPassword'
 import Disclaimer from './Disclaimer'
 import ReceiptAnalyzer from './ReceiptAnalyzer'
 import SearchMedicines from './SearchMedicines'
+import Feedback from './Feedback'
 
 const Pages = () => {
   return (
@@ -18,7 +19,7 @@ const Pages = () => {
                 <Route path = "/disclaimer" element = {<Disclaimer/>}/>
                 <Route path = "/uploadPrescription" element={<ReceiptAnalyzer/>}/>
                 <Route path = "/searchMedicine" element={<SearchMedicines/>}/>
-                <Route path = "/Feedback" element={<Home/>}/>
+                <Route path = "/Feedback" element={<Feedback/>}/>
                 <Route path = "/History" element={<Home/>}/>
             </Routes>
         </div>
