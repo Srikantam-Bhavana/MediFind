@@ -38,10 +38,9 @@ async def analyze_receipt(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# with open('Data.json', 'r') as file:
-#     medicines_data = json.load(file).get('sheet1', [])
-with open('data.json', 'r', encoding='utf-8') as file:
-    medicines_data = json.load(file)["sheet1"]
+
+with open('Data.json', 'r') as file:
+    medicines_data = json.load(file).get('sheet1', [])
 
 
 @app.post("/api/searchAlternativesFromPrescription")
@@ -50,8 +49,8 @@ async def search_alternatives_from_prescription(data: dict):
         print("data:", data)
         
         medicines = data.get('medicines', [])
-        print("all the medicines:", medicines)
-       
+        # print("all the medicines:", medicines)
+
         response = { "alternatives": {} }
 
         for medicine in medicines:
@@ -64,49 +63,17 @@ async def search_alternatives_from_prescription(data: dict):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 def get_alternatives_for_medicine(search_term):
     matching_medicines = [
-        {
-            "title": medicine["title"],
-            "price": decode_price(medicine["price"]),
-            "quantity": medicine["quantity"],
-            "manufacturingCompany": medicine["manufacturingCompany"],
-            "description": medicine["description"],
-            "id": medicine["id"]
-        }
+        medicine
         for medicine in medicines_data
-        if re.search(re.escape(search_term.lower()), medicine["title"].lower()) or
-           re.search(re.escape(search_term.lower()), medicine["description"].lower())
-
+       if re.search(re.escape(search_term.lower()), medicine["title"].lower()) or
+           re.search(re.escape(search_term.lower()), medicine["composition"].lower())
     ]
 
     return matching_medicines
 
-def decode_price(price):
-    return price.encode('utf-8').decode('utf-8')
-
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
