@@ -40,6 +40,8 @@ async def analyze_receipt(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+with open('Data.json', 'r') as file:
+    medicines_data = json.load(file).get('sheet1', [])
 
 with open('medicinesdata.json', 'r') as file:
     medicines_data = json.load(file).get('sheet1', [])
@@ -83,15 +85,37 @@ if __name__ == '__main__':
 
 
 
+@app.post("/api/searchAlternativesFromPrescription")
+async def search_alternatives_from_prescription(data: dict):
+    try:
+        print("data:", data)
+        
+        medicines = data.get('medicines', [])
+        # print("all the medicines:", medicines)
+
+        response = { "alternatives": {} }
+
+        for medicine in medicines:
+            alternatives = get_alternatives_for_medicine(medicine)
+            response["alternatives"][medicine] = alternatives
+
+        print("Complete Response:", response)
+        return response
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
+def get_alternatives_for_medicine(search_term):
+    matching_medicines = [
+        medicine
+        for medicine in medicines_data
+       if re.search(re.escape(search_term.lower()), medicine["title"].lower()) or
+           re.search(re.escape(search_term.lower()), medicine["composition"].lower())
+    ]
 
+    return matching_medicines
 
-
-
-
-
-
-
-
-
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
