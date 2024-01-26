@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Button, TextField, Typography, Container } from '@mui/material';
+import theme from '../Styles/colorTheme';
+import { ThemeProvider } from '@emotion/react'
+import Navbar from './Navbar';
+
 const Feedback = () => {
   const [feedback, setFeedback] = useState('');
   const handleSubmit = async (e) => {
@@ -28,7 +32,9 @@ const Feedback = () => {
     setFeedback('');
   };
   return (
-    <Container maxWidth="sm">
+    <ThemeProvider theme={theme}>
+    <Navbar/>
+    <Container maxWidth="sm" style={{padding:"2%"}}>
       <Typography variant="h4" gutterBottom>
         Feedback Form
       </Typography>
@@ -48,6 +54,7 @@ const Feedback = () => {
         </Button>
       </form>
     </Container>
+    </ThemeProvider>
   );
 };
 

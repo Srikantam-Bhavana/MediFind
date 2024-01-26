@@ -110,7 +110,7 @@ function Navbar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/home"
             color='primary'
             sx={{
               mr: 2,

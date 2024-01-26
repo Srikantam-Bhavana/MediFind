@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
+import { Button, FormControlLabel, FormGroup, Checkbox } from '@mui/material';
 import {
   TablePagination,
   tablePaginationClasses as classes,
@@ -16,18 +17,36 @@ const GenericMedicines = ({props}) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [rows, setRows] = React.useState(props);
-    const headings = ["title", "price", "quantity", "manufacturingCompany", "description"]
+    const [checkedOptions, setCheckedOptions] = React.useState([]);
+    const headings = ["title", "price", "quantity", "manufacturingCompany", "description", "select"]
     const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+    const handleChange = (e) =>{
+      const { value, checked } = e.target;
+      console.log(e.target);
+      if (checked) {
+        setCheckedOptions([...checkedOptions, value]);
+      } else {
+        setCheckedOptions(checkedOptions.filter((option) => option !== value));
+      }
+    };
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
+    const handleSubmit = (e) =>{
+      console.log(checkedOptions);
+    }
+
+    React.useEffect(()=>{
+      // console.log(rows);
+    })
   return (
     <div style={{justifyItems:'center', justifyContent:'center', paddingLeft:'5%', paddingRight:'5%'}}>
         <ThemeProvider theme={theme}>
@@ -65,6 +84,18 @@ const GenericMedicines = ({props}) => {
                     <td style={{width: 300}}  align="right">
                         {row.description}
                     </td>
+                    <td>
+                    <form onSubmit={(e) => {
+                      console.log("sahitya")
+                      handleSubmit(e)}}>
+                    <FormGroup>
+                      <FormControlLabel 
+                      control={<Checkbox checked={checkedOptions.includes(row.title)}/>}  
+                      value={row.title} 
+                      onChange={handleChange}/>
+                    </FormGroup>
+                    </form>
+                    </td>
                     </tr>
                 ))}
                 {emptyRows > 0 && (
@@ -99,6 +130,7 @@ const GenericMedicines = ({props}) => {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                     />
+                    <Button type='submit' variant="contained" >Submit</Button>
                 </tr>
                 </tfoot>
             </table>

@@ -15,14 +15,7 @@ const ReceiptAnalyzer = () => {
   const [checkedOptions, setCheckedOptions] = useState([]);
   const [submit, setSubmit] = useState(false)
   const [analyze, setAnalyze] = useState(false)
-  const alt = [{
-        "title": "Augmentin 625 Duo Tablet",
-        "price": "MRP₹182.78",
-        "quantity": "strip of 10 tablets",
-        "manufacturingCompany": "Glaxo SmithKline Pharmaceuticals Ltd",
-        "description": "Amoxycillin (500mg) + Clavulanic Acid (125mg)",
-        "id": 2
-      }];
+  const [alternatives, setAlternatives] = useState([]);
   const [alternativesFound, setAlternativesFound] = useState(0);
 
   const handleFileChange = (event) => {
@@ -31,7 +24,7 @@ const ReceiptAnalyzer = () => {
 
   const analyzeReceipt = async () => {
     setAnalyze(true)
-    console.log("analyze:", analyze);
+    // console.log("analyze:", analyze);
     try {
       if (!selectedFile) {
         console.error("Please select a file.");
@@ -55,7 +48,7 @@ const ReceiptAnalyzer = () => {
 
   const handleChange = (e) =>{
     const { value, checked } = e.target;
-    console.log(e.target);
+    // console.log(e.target);
     if (checked) {
       setCheckedOptions([...checkedOptions, value]);
     } else {
@@ -66,14 +59,17 @@ const ReceiptAnalyzer = () => {
   const handleSubmit = async (e) =>{
     e.preventDefault();
     setSubmit(true);
-    console.log(checkedOptions);
     const obj = {
-      "medicine": checkedOptions,
+      "medicines": checkedOptions,
     };
-    const response = await axios.post("/api/searchAlternativesFromPrescription", obj);
-    console.log(response)
-    setAlternativesFound(3);
-    console.log(submit)
+    const response = await axios.post("http://localhost:8000/api/searchAlternativesFromPrescription", obj);
+    // console.log(response.data.alternatives);
+    setAlternativesFound(Object.keys(response.data.alternatives).length);
+    // for (const medicine in response.data.alternatives) {
+      // console.log(`Medicine: ${medicine}`);
+      // console.log(response.data.alternatives[medicine][0].price);
+    // }
+    setAlternatives(response.data.alternatives);
   }
 
   return (
@@ -98,7 +94,7 @@ const ReceiptAnalyzer = () => {
                       onChange={handleChange}/>
                     </FormGroup>
                   ))}
-                  <Button type='submit' variant="contained">Submit</Button>
+                  <Button type='submit' variant="contained" >Submit</Button>
                   </form>
               </div> )             
              : (analyze ? 
@@ -110,8 +106,34 @@ const ReceiptAnalyzer = () => {
       {submit ? 
             <div>
               <Typography color='primary' variant='h5' style={{padding:'2%'}}>Suitable Generic Alternatives found: </Typography>
-              <GenericMedicines props = {alt}/>
-            </div>: "generic medicines are displayed here"}
+              {/* <GenericMedicines props = {alternatives}/> */}
+              {alternativesFound > 0 ? Object.keys(alternatives).map((medicine)=>(
+                <div>
+                <Typography color='primary' variant='h6' style={{padding:'2%'}}>{medicine}</Typography>
+                {
+                  // Array.from({ length: alternativesFound }, (_, i) => (
+                    alternatives[medicine].length > 0?
+                    <GenericMedicines  props = {alternatives[medicine]} />:<p>Generic Alternatives are not available for this medicine</p>
+                    // <GenericMedicines  props = {[{
+                    //   "title": "Augmentin 625 Duo Tablet",
+                    //   "price": "MRP₹182.78",
+                    //   "quantity": "strip of 10 tablets",
+                    //   "manufacturingCompany": "Glaxo SmithKline Pharmaceuticals Ltd",
+                    //   "description": "Amoxycillin (500mg) + Clavulanic Acid (125mg)",
+                    //   "id": 2
+                    // },{
+                    //   "title": "Aricep 5 Tablet",
+                    //   "price": "MRP₹118",
+                    //   "quantity": "strip of 10 tablets",
+                    //   "manufacturingCompany": "Eisai Pharmaceuticals India Pvt Ltd",
+                    //   "description": "Donepezil (5mg)",
+                    //   "id": 3
+                    // }]} />
+                  // ))
+                }
+                </div>
+              )):""}
+            </div>: "generic medicines will be displayed here"}
       </div>
       </ThemeProvider>
   );
