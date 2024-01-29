@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, FormControlLabel, FormGroup, Checkbox } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { Input } from '@mui/material';
 import theme from '../Styles/colorTheme';
 import { ThemeProvider } from '@emotion/react'
@@ -17,6 +18,13 @@ const ReceiptAnalyzer = () => {
   const [analyze, setAnalyze] = useState(false)
   const [alternatives, setAlternatives] = useState([]);
   const [alternativesFound, setAlternativesFound] = useState(0);
+  const history = useNavigate();
+
+  React.useEffect(()=>{
+    if(!sessionStorage.getItem("isLoggedIn")){
+      history("/");
+    }
+  })
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -41,6 +49,7 @@ const ReceiptAnalyzer = () => {
       });
 
       setprescribedItems(response.data.items);  
+      
     } catch (error) {
       console.error("An error occurred:", error.message || error);
     }
@@ -113,23 +122,7 @@ const ReceiptAnalyzer = () => {
                 {
                   // Array.from({ length: alternativesFound }, (_, i) => (
                     alternatives[medicine].length > 0?
-                    <GenericMedicines  props = {alternatives[medicine]} />:<p>Generic Alternatives are not available for this medicine</p>
-                    // <GenericMedicines  props = {[{
-                    //   "title": "Augmentin 625 Duo Tablet",
-                    //   "price": "MRP₹182.78",
-                    //   "quantity": "strip of 10 tablets",
-                    //   "manufacturingCompany": "Glaxo SmithKline Pharmaceuticals Ltd",
-                    //   "description": "Amoxycillin (500mg) + Clavulanic Acid (125mg)",
-                    //   "id": 2
-                    // },{
-                    //   "title": "Aricep 5 Tablet",
-                    //   "price": "MRP₹118",
-                    //   "quantity": "strip of 10 tablets",
-                    //   "manufacturingCompany": "Eisai Pharmaceuticals India Pvt Ltd",
-                    //   "description": "Donepezil (5mg)",
-                    //   "id": 3
-                    // }]} />
-                  // ))
+                    <GenericMedicines  alternatives = {alternatives[medicine]} prescribed = {medicine} />:<p>Generic Alternatives are not available for this medicine</p>
                 }
                 </div>
               )):""}

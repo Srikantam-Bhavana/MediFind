@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { database } from '../firebaseConfig';
+import { auth } from '../firebaseConfig';
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth'
 import { useNavigate } from 'react-router-dom';
 import '../Styles/Styles.css';
@@ -26,21 +26,28 @@ const RegisterAndLogin = () => {
         const password = e.target.password.value;
 
         if(type === 'SignUp'){
-            createUserWithEmailAndPassword(database, email, password).then(data =>{
-                console.log(data, "authData");
+            createUserWithEmailAndPassword(auth, email, password).then(data =>{
+                console.log(data.user.email, "authData");
+                sessionStorage.setItem('userEmail', data.user.email);
+                sessionStorage.setItem('isLoggedIn', true);
                 history("/disclaimer");
             }).catch(err =>{
                 console.log(err.code);
                 alert(err.code)
+                sessionStorage.setItem('isLoggedIn', false);
                 if(err.code === "auth/email-already-in-use"){
                     setLogin(true);
                 }
             })
         }else{
-            signInWithEmailAndPassword(database, email, password).then(data =>{
-                console.log(data, "authData");
+            signInWithEmailAndPassword(auth, email, password).then(data =>{
+                // console.log(data, "authData");
+                console.log(data.user.email, "authData");
+                sessionStorage.setItem('userEmail', data.user.email);
+                sessionStorage.setItem('isLoggedIn', true);
                 history("/disclaimer");
             }).catch(err =>{
+                sessionStorage.setItem('isLoggedIn', false);
                 alert(err.code)
             })
         }

@@ -14,7 +14,13 @@ import PrescriptionImg from '../prescription.jpg';
 import SearchImg from '../searchImage.jpg';
  
 const Home = () => {
-    const history = useNavigate()
+    const history = useNavigate();
+
+    React.useEffect(()=>{
+        if(!sessionStorage.getItem("isLoggedIn")){
+        history("/");
+        }
+    })
 
     return (
         <div>

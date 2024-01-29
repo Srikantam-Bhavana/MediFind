@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { database } from '../firebaseConfig';
+import { auth } from '../firebaseConfig';
 
 const pages = ['Feedback', 'History', ];
 
@@ -34,7 +34,7 @@ function Navbar() {
 
   const history = useNavigate()
     const handleSignOut = () =>{
-        signOut(database).then(val =>{
+        signOut(auth).then(val =>{
             console.log(val, "val")
             history('/')
         })

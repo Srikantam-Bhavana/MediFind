@@ -7,6 +7,7 @@ import Disclaimer from './Disclaimer'
 import ReceiptAnalyzer from './ReceiptAnalyzer'
 import SearchMedicines from './SearchMedicines'
 import Feedback from './Feedback'
+import History from './History'
 
 const Pages = () => {
   return (
@@ -20,7 +21,7 @@ const Pages = () => {
                 <Route path = "/uploadPrescription" element={<ReceiptAnalyzer/>}/>
                 <Route path = "/searchMedicine" element={<SearchMedicines/>}/>
                 <Route path = "/Feedback" element={<Feedback/>}/>
-                <Route path = "/History" element={<Home/>}/>
+                <Route path = "/History" element={<History/>}/>
             </Routes>
         </div>
     </BrowserRouter> 

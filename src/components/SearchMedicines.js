@@ -6,6 +6,7 @@ import theme from '../Styles/colorTheme';
 import { ThemeProvider } from '@emotion/react'
 import { Typography } from '@mui/material';
 import GenericMedicines from './GenericMedicines';
+import { useNavigate } from 'react-router-dom';
 
 const TextBoxStyle = {
     display: "flex",
@@ -23,6 +24,13 @@ const SearchMedicines = () => {
     const [alternatives, setAlternatives] = useState([]);
     const [alternativesFound, setAlternativesFound] = useState(0);
     const [submit, setSubmit] = useState(false);
+    const history = useNavigate();
+
+  React.useEffect(()=>{
+    if(!sessionStorage.getItem("isLoggedIn")){
+      history("/");
+    }
+  })
 
     const handleSearch = async (e) => {
         setSubmit(true)
@@ -34,18 +42,16 @@ const SearchMedicines = () => {
         const response = await axios.post("http://localhost:8000/api/searchAlternativesFromPrescription", obj);
         setAlternativesFound(Object.keys(response.data.alternatives).length);
         setAlternatives(response.data.alternatives);
-        // axios.post("",textBoxValue)
-        // .then((res) => {
-        //     console.log(res);
-        // })
-        // history("/genericMedicines",[{
-        //     "title": "Augmentin 625 Duo Tablet",
-        //     "price": "MRP₹182.78",
-        //     "quantity": "strip of 10 tablets",
-        //     "manufacturingCompany": "Glaxo SmithKline Pharmaceuticals Ltd",
-        //     "description": "Amoxycillin (500mg) + Clavulanic Acid (125mg)",
-        //     "id": 2
-        //   }]);
+        console.log(response.data.alternatives)
+        console.log("sahitya")
+        if(alternativesFound>0){
+          Object.keys(alternatives).map((medicine)=>{
+            // if(alternatives[medicine].length > 0){
+            //   console.log("alternatives[medicine]")
+            // }
+            console.log(alternatives.medicine)
+          })
+        }
     }
   return (
     <div>
@@ -74,7 +80,8 @@ const SearchMedicines = () => {
                 }
                 </div>
               )):""}
-            </div>:<div style={{padding:"2%"}}><Typography> generic medicines will be displayed here </Typography> </div>}
+            </div>:
+            <div style={{padding:"2%"}}><Typography> generic medicines will be displayed here </Typography> </div>}
             </div>
         </ThemeProvider>
     </div>

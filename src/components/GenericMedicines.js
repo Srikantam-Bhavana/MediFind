@@ -12,13 +12,17 @@ import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { Typography } from '@mui/material';
 import theme from '../Styles/colorTheme';
 import { ThemeProvider } from '@emotion/react'
+import { addDoc } from 'firebase/firestore';
+import { database, auth } from '../firebaseConfig';
+import { collection } from 'firebase/firestore';
 
-const GenericMedicines = ({props}) => {
+const GenericMedicines = ({alternatives, prescribed}) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [rows, setRows] = React.useState(props);
+    const [rows, setRows] = React.useState(alternatives);
     const [checkedOptions, setCheckedOptions] = React.useState([]);
-    const headings = ["title", "price", "quantity", "manufacturingCompany", "description", "select"]
+    const historyCollectionRef = collection(database, "userHistory");
+    const headings = ["title", "cost", "dosage", "manufacturer", "composition", "select"]
     const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -40,9 +44,19 @@ const GenericMedicines = ({props}) => {
         setPage(0);
     };
 
-    const handleSubmit = (e) =>{
+    const handleSubmit = async (e) =>{
+      try{
+      e.preventDefault();
       console.log(checkedOptions);
-    }
+      await addDoc(historyCollectionRef, {
+        PrescribedMedicine: prescribed,
+        AlternativeChoosen: checkedOptions,
+        userId: auth?.currentUser?.uid,
+      });
+      } catch(err){
+        console.log(err);
+      }
+    };
 
     React.useEffect(()=>{
       // console.log(rows);
@@ -51,6 +65,10 @@ const GenericMedicines = ({props}) => {
     <div style={{justifyItems:'center', justifyContent:'center', paddingLeft:'5%', paddingRight:'5%'}}>
         <ThemeProvider theme={theme}>
         <Root sx={{ maxWidth: '100%' }}>
+        <form onSubmit={(e)=>{
+          console.log("sahitya");
+          handleSubmit(e);
+        }}>
             <table aria-label="generic medicine alternatives">
                 <thead>
                 <tr>
@@ -73,28 +91,24 @@ const GenericMedicines = ({props}) => {
                       {row.title}
                     </td>
                     <td style={{width: 300}}  align="right">
-                        {row.price}
+                        {row.cost}
                     </td>
                     <td style={{width: 300}}  align="right">
-                        {row.quantity}
+                        {row.dosage}
                     </td>
                     <td style={{width: 300}}  align="right">
-                        {row.manufacturingCompany}
+                        {row.manufacturer}
                     </td>
                     <td style={{width: 300}}  align="right">
-                        {row.description}
+                        {row.composition}
                     </td>
                     <td>
-                    <form onSubmit={(e) => {
-                      console.log("sahitya")
-                      handleSubmit(e)}}>
                     <FormGroup>
                       <FormControlLabel 
                       control={<Checkbox checked={checkedOptions.includes(row.title)}/>}  
                       value={row.title} 
                       onChange={handleChange}/>
                     </FormGroup>
-                    </form>
                     </td>
                     </tr>
                 ))}
@@ -112,7 +126,7 @@ const GenericMedicines = ({props}) => {
                     count={rows.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
-                    slotProps={{
+                    slotalternatives={{
                         select: {
                         'aria-label': 'rows per page',
                         },
@@ -134,6 +148,7 @@ const GenericMedicines = ({props}) => {
                 </tr>
                 </tfoot>
             </table>
+          </form>
         </Root>
         </ThemeProvider>
     </div>

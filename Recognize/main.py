@@ -2,9 +2,8 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from azure.core.credentials import AzureKeyCredential
 from azure.ai.formrecognizer import DocumentAnalysisClient
-import re
-import json 
-
+import re 
+import json
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -43,9 +42,6 @@ async def analyze_receipt(file: UploadFile = File(...)):
 with open('Data.json', 'r') as file:
     medicines_data = json.load(file).get('sheet1', [])
 
-with open('medicinesdata.json', 'r') as file:
-    medicines_data = json.load(file).get('sheet1', [])
-
 
 @app.post("/api/searchAlternativesFromPrescription")
 async def search_alternatives_from_prescription(data: dict):
@@ -69,52 +65,19 @@ async def search_alternatives_from_prescription(data: dict):
 
 
 def get_alternatives_for_medicine(search_term):
+    if not re.search(r'\(\d+mg\)', search_term):
+        modified_search_term = re.sub(r'(\d+mg)', r'(\1)', search_term)
+    else:
+        modified_search_term = search_term
     matching_medicines = [
         medicine
         for medicine in medicines_data
-       if re.search(re.escape(search_term.lower()), medicine["title"].lower()) or
-           re.search(re.escape(search_term.lower()), medicine["description"].lower())
+        if re.search(re.escape(modified_search_term.lower()), medicine["title"].lower()) or
+        re.search(re.escape(modified_search_term.lower()), medicine["composition"].lower())
     ]
+    sorted_medicines = sorted(matching_medicines, key=lambda x: float(x.get('cost', 0)))
 
-    return matching_medicines
-
-if __name__ == '__main__':
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
-
-
-
-
-@app.post("/api/searchAlternativesFromPrescription")
-async def search_alternatives_from_prescription(data: dict):
-    try:
-        print("data:", data)
-        
-        medicines = data.get('medicines', [])
-        # print("all the medicines:", medicines)
-
-        response = { "alternatives": {} }
-
-        for medicine in medicines:
-            alternatives = get_alternatives_for_medicine(medicine)
-            response["alternatives"][medicine] = alternatives
-
-        print("Complete Response:", response)
-        return response
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-def get_alternatives_for_medicine(search_term):
-    matching_medicines = [
-        medicine
-        for medicine in medicines_data
-       if re.search(re.escape(search_term.lower()), medicine["title"].lower()) or
-           re.search(re.escape(search_term.lower()), medicine["composition"].lower())
-    ]
-
-    return matching_medicines
+    return sorted_medicines
 
 if __name__ == '__main__':
     import uvicorn
