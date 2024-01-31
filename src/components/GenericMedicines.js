@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/system';
 import { Button, FormControlLabel, FormGroup, Checkbox } from '@mui/material';
 import {
@@ -17,14 +17,24 @@ import { database, auth } from '../firebaseConfig';
 import { collection } from 'firebase/firestore';
 
 const GenericMedicines = ({alternatives, prescribed}) => {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [rows, setRows] = React.useState(alternatives);
-    const [checkedOptions, setCheckedOptions] = React.useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rows, setRows] = useState(alternatives);
+    const [checkedOptions, setCheckedOptions] = useState([]);
+    const [checkedOptionDetails, setCheckedOptionDetails] = useState([]);
+    const [submit, setSubmit] = useState(false);
     const historyCollectionRef = collection(database, "userHistory");
     const headings = ["title", "cost", "dosage", "manufacturer", "composition", "select"]
     const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+    useEffect(()=>{
+      console.log("checked option details updated");
+      console.log(checkedOptionDetails)
+      console.log("session");
+      sessionStorage.setItem(prescribed, JSON.stringify(checkedOptionDetails));
+      console.log(sessionStorage.getItem(prescribed));
+    }, [checkedOptionDetails])
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -45,25 +55,34 @@ const GenericMedicines = ({alternatives, prescribed}) => {
     };
 
     const handleSubmit = async (e) =>{
-      try{
       e.preventDefault();
-      console.log(checkedOptions);
-      await addDoc(historyCollectionRef, {
-        PrescribedMedicine: prescribed,
-        AlternativeChoosen: checkedOptions,
-        userId: auth?.currentUser?.uid,
-      });
-      } catch(err){
-        console.log(err);
+      checkedOptions.map((option)=>{
+        const optionDetails = alternatives.filter(alternative => alternative.title === option);
+        console.log(optionDetails);
+        setCheckedOptionDetails((checkedOptionDetails) => [...checkedOptionDetails, optionDetails]);
+      })
+      console.log(checkedOptionDetails);
+      
+      if(checkedOptions.length !== 0){
+        try{
+          await addDoc(historyCollectionRef, {
+            PrescribedMedicine: prescribed,
+            AlternativeChoosen: checkedOptions,
+            userId: auth?.currentUser?.uid,
+          });
+          setSubmit(true);
+          } catch(err){
+            console.log(err);
+          }
+      }
+      else{
+        alert("Please choose at least one alternative and submit");
       }
     };
 
-    React.useEffect(()=>{
-      // console.log(rows);
-    })
   return (
     <div style={{justifyItems:'center', justifyContent:'center', paddingLeft:'5%', paddingRight:'5%'}}>
-        <ThemeProvider theme={theme}>
+        { !submit ? <ThemeProvider theme={theme}>
         <Root sx={{ maxWidth: '100%' }}>
         <form onSubmit={(e)=>{
           console.log("sahitya");
@@ -150,7 +169,7 @@ const GenericMedicines = ({alternatives, prescribed}) => {
             </table>
           </form>
         </Root>
-        </ThemeProvider>
+        </ThemeProvider> : <div>Alternative submitted</div>}
     </div>
   )
 }

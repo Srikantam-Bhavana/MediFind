@@ -5,20 +5,17 @@ import { ThemeProvider } from '@emotion/react'
 import { database, auth } from '../firebaseConfig';
 import { getDocs, collection, query, where } from 'firebase/firestore';
 import Navbar from './Navbar'
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import { Table, TableBody, TableCell, TableRow, TableHead, TableContainer, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
+import { useNavigate } from 'react-router-dom';
 
 const History = () => {
   const [history, setHistory] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(()=>{
     if(!sessionStorage.getItem("isLoggedIn")){
-      history("/");
+      navigate("/");
     }
     console.log("entered history");
     const userId = auth?.currentUser?.uid;
@@ -47,14 +44,14 @@ const History = () => {
   return (
     <div>
       <Navbar />
-      <div style={{justifyItems:'center', justifyContent:'center', paddingLeft:'15%', paddingRight:'15%', padding:'10%'}}>
+      <div style={{justifyItems:'center', justifyContent:'center', paddingLeft:'20%', paddingRight:'20%', padding:'3%'}}>
         <ThemeProvider theme={theme}>
       <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Prescribed Medicine</TableCell>
-            <TableCell align="right">Alternative Choosen</TableCell>
+            <TableCell><Typography variant='h4' color='primary'>Prescribed Medicine</Typography></TableCell>
+            <TableCell><Typography variant='h4' color='primary'>Alternative Choosen</Typography></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -66,7 +63,9 @@ const History = () => {
               <TableCell component="th" scope="row">
                 {row.PrescribedMedicine}
               </TableCell>
-              <TableCell align="right">{row.AlternativeChoosen}</TableCell>
+              <TableCell >{row.AlternativeChoosen.map((alternative)=>(
+                 <div style={{display:"inline"}}> {alternative} , </div>
+              ))}</TableCell>
             </TableRow>
           ))}
         </TableBody>

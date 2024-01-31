@@ -20,7 +20,7 @@ const ButtonStyle = {
 }
 
 const SearchMedicines = () => {
-    const [textBoxValue, setTextBoxValue] = React.useState();
+    const [textBoxValue, setTextBoxValue] = useState();
     const [alternatives, setAlternatives] = useState([]);
     const [alternativesFound, setAlternativesFound] = useState(0);
     const [submit, setSubmit] = useState(false);
@@ -32,10 +32,14 @@ const SearchMedicines = () => {
     }
   })
 
+    const handleNoAlternatives = (medicine) =>{
+      sessionStorage.setItem(medicine, JSON.stringify([{}]));
+    }
+
     const handleSearch = async (e) => {
         setSubmit(true)
         e.preventDefault();
-        console.log(textBoxValue);
+        sessionStorage.setItem("medicines", JSON.stringify([textBoxValue]));
         const obj = {
             "medicines": [textBoxValue],
         };
@@ -46,9 +50,6 @@ const SearchMedicines = () => {
         console.log("sahitya")
         if(alternativesFound>0){
           Object.keys(alternatives).map((medicine)=>{
-            // if(alternatives[medicine].length > 0){
-            //   console.log("alternatives[medicine]")
-            // }
             console.log(alternatives.medicine)
           })
         }
@@ -71,17 +72,22 @@ const SearchMedicines = () => {
         {submit ? 
             <div>
               <Typography color='primary' variant='h5' style={{padding:'2%'}}>Suitable Generic Alternatives found: </Typography>
+             
               {alternativesFound > 0 ? Object.keys(alternatives).map((medicine)=>(
                 <div>
                 <Typography color='primary' variant='h6' style={{padding:'2%'}}>{medicine}</Typography>
                 {
+                  
                     alternatives[medicine].length > 0?
-                    <GenericMedicines  props = {alternatives[medicine]} />:<p>Generic Alternatives are not available for this medicine</p>
+                    <GenericMedicines  alternatives = {alternatives[medicine]} prescribed = {medicine} />:<p> {handleNoAlternatives(medicine)} Generic Alternatives are not available for this medicine</p>
                 }
                 </div>
               )):""}
-            </div>:
-            <div style={{padding:"2%"}}><Typography> generic medicines will be displayed here </Typography> </div>}
+              <Button variant='contained' onClick={()=>{
+                  history("/FinalReceipt")
+                }}>Click here to see the selected Alternatives</Button>
+            </div>: "generic medicines will be displayed here"}
+
             </div>
         </ThemeProvider>
     </div>

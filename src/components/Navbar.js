@@ -30,13 +30,11 @@ function Navbar() {
     setAnchorElNav(null);
   };
 
-
-
   const history = useNavigate()
     const handleSignOut = () =>{
+      sessionStorage.removeItem("isLoggedIn");
         signOut(auth).then(val =>{
-            console.log(val, "val")
-            history('/')
+          history('/')
         })
     }
 

@@ -42,43 +42,38 @@ async def analyze_receipt(file: UploadFile = File(...)):
 with open('Data.json', 'r') as file:
     medicines_data = json.load(file).get('sheet1', [])
 
-
 @app.post("/api/searchAlternativesFromPrescription")
 async def search_alternatives_from_prescription(data: dict):
     try:
         print("data:", data)
-        
         medicines = data.get('medicines', [])
-        # print("all the medicines:", medicines)
-
         response = { "alternatives": {} }
-
         for medicine in medicines:
             alternatives = get_alternatives_for_medicine(medicine)
             response["alternatives"][medicine] = alternatives
-
         print("Complete Response:", response)
         return response
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 def get_alternatives_for_medicine(search_term):
-    if not re.search(r'\(\d+mg\)', search_term):
-        modified_search_term = re.sub(r'(\d+mg)', r'(\1)', search_term)
-    else:
-        modified_search_term = search_term
     matching_medicines = [
         medicine
         for medicine in medicines_data
-        if re.search(re.escape(modified_search_term.lower()), medicine["title"].lower()) or
-        re.search(re.escape(modified_search_term.lower()), medicine["composition"].lower())
+         if re.search(re.escape(search_term.lower()), medicine["title"].lower()) or
+        re.search(re.escape(search_term.lower()), medicine["composition"].lower())
     ]
-    sorted_medicines = sorted(matching_medicines, key=lambda x: float(x.get('cost', 0)))
-
-    return sorted_medicines
-
+    if not matching_medicines:
+        return []  
+    first_match = matching_medicines[0]
+    composition_to_match = first_match.get("composition", "").lower()
+    alternatives = [
+        medicine
+        for medicine in medicines_data
+        if medicine.get("composition", "").lower() == composition_to_match
+    ]
+    sorted_alternatives = sorted(alternatives, key=lambda x: float(x.get('cost', 0)))
+    return sorted_alternatives
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)

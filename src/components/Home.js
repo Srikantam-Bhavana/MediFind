@@ -17,8 +17,8 @@ const Home = () => {
     const history = useNavigate();
 
     React.useEffect(()=>{
-        if(!sessionStorage.getItem("isLoggedIn")){
-        history("/");
+        if(sessionStorage.getItem("isLoggedIn") === false){
+            history("/");
         }
     })
 

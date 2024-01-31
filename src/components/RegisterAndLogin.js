@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { auth } from '../firebaseConfig';
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth'
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,10 @@ const RegisterAndLogin = () => {
     const [login, setLogin] = useState(false)
 
     const history = useNavigate()
+
+    useEffect(()=>{
+        sessionStorage.setItem("isLoggedIn", false);
+    }, [])
 
     const handleSubmit = (e, type) =>{
         e.preventDefault();

@@ -32,7 +32,6 @@ const ReceiptAnalyzer = () => {
 
   const analyzeReceipt = async () => {
     setAnalyze(true)
-    // console.log("analyze:", analyze);
     try {
       if (!selectedFile) {
         console.error("Please select a file.");
@@ -47,7 +46,6 @@ const ReceiptAnalyzer = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
       setprescribedItems(response.data.items);  
       
     } catch (error) {
@@ -57,7 +55,6 @@ const ReceiptAnalyzer = () => {
 
   const handleChange = (e) =>{
     const { value, checked } = e.target;
-    // console.log(e.target);
     if (checked) {
       setCheckedOptions([...checkedOptions, value]);
     } else {
@@ -65,19 +62,22 @@ const ReceiptAnalyzer = () => {
     }
   };
 
+  const handleNoAlternatives = (medicine) =>{
+    sessionStorage.setItem(medicine, JSON.stringify([{}]));
+  }
+
   const handleSubmit = async (e) =>{
     e.preventDefault();
     setSubmit(true);
+    sessionStorage.setItem("medicines", JSON.stringify(checkedOptions));
+    console.log("checked options are: ")
+    console.log(checkedOptions);
     const obj = {
       "medicines": checkedOptions,
     };
     const response = await axios.post("http://localhost:8000/api/searchAlternativesFromPrescription", obj);
-    // console.log(response.data.alternatives);
+
     setAlternativesFound(Object.keys(response.data.alternatives).length);
-    // for (const medicine in response.data.alternatives) {
-      // console.log(`Medicine: ${medicine}`);
-      // console.log(response.data.alternatives[medicine][0].price);
-    // }
     setAlternatives(response.data.alternatives);
   }
 
@@ -122,10 +122,15 @@ const ReceiptAnalyzer = () => {
                 {
                   // Array.from({ length: alternativesFound }, (_, i) => (
                     alternatives[medicine].length > 0?
-                    <GenericMedicines  alternatives = {alternatives[medicine]} prescribed = {medicine} />:<p>Generic Alternatives are not available for this medicine</p>
+                    <GenericMedicines  alternatives = {alternatives[medicine]} prescribed = {medicine} />:<p> {handleNoAlternatives(medicine)} Generic Alternatives are not available for this medicine</p>
                 }
                 </div>
               )):""}
+              <div>
+                <Button variant='contained' onClick={()=>{
+                  history("/FinalReceipt")
+                }}>Click here to see the selected Alternatives</Button>
+              </div>
             </div>: "generic medicines will be displayed here"}
       </div>
       </ThemeProvider>

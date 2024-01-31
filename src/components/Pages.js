@@ -8,6 +8,7 @@ import ReceiptAnalyzer from './ReceiptAnalyzer'
 import SearchMedicines from './SearchMedicines'
 import Feedback from './Feedback'
 import History from './History'
+import FinalReceipt from './FinalReceipt'
 
 const Pages = () => {
   return (
@@ -22,6 +23,7 @@ const Pages = () => {
                 <Route path = "/searchMedicine" element={<SearchMedicines/>}/>
                 <Route path = "/Feedback" element={<Feedback/>}/>
                 <Route path = "/History" element={<History/>}/>
+                <Route path='/FinalReceipt' element = {<FinalReceipt/>} />
             </Routes>
         </div>
     </BrowserRouter> 
