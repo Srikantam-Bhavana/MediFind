@@ -31,13 +31,13 @@ const ReceiptAnalyzer = () => {
   };
 
   const analyzeReceipt = async () => {
-    setAnalyze(true)
     try {
       if (!selectedFile) {
         console.error("Please select a file.");
+        alert("Please select a file.");
         return;
       }
-
+      setAnalyze(true)
       const formData = new FormData();
       formData.append('file', selectedFile);
 
@@ -49,6 +49,8 @@ const ReceiptAnalyzer = () => {
       setprescribedItems(response.data.items);  
       
     } catch (error) {
+      setAnalyze(false)
+      alert("An error occurred:", error.message || error)
       console.error("An error occurred:", error.message || error);
     }
   };
