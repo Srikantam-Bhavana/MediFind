@@ -108,7 +108,7 @@ const ReceiptAnalyzer = () => {
                       onChange={handleChange}/>
                     </FormGroup>
                   ))}
-                  <Button type='submit' variant="contained" >Submit</Button>
+                  <Button type='submit' variant="contained" >See Available Generic Alternatives</Button>
                   </form>
               </div> )             
              : (analyze ? 

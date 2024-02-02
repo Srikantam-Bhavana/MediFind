@@ -84,10 +84,10 @@ const GenericMedicines = ({alternatives, prescribed}) => {
     <div style={{justifyItems:'center', justifyContent:'center', paddingLeft:'5%', paddingRight:'5%'}}>
         { !submit ? <ThemeProvider theme={theme}>
         <Root sx={{ maxWidth: '100%' }}>
-        <form onSubmit={(e)=>{
+        {/* <form onSubmit={(e)=>{
           console.log("sahitya");
           handleSubmit(e);
-        }}>
+        }}> */}
             <table aria-label="generic medicine alternatives">
                 <thead>
                 <tr>
@@ -106,6 +106,7 @@ const GenericMedicines = ({alternatives, prescribed}) => {
                     : rows
                 ).map((row) => (
                     <tr key={row.title}>
+                    {/* <FormGroup> */}
                     <td style={{width: 300}}>
                       {row.title}
                     </td>
@@ -122,13 +123,14 @@ const GenericMedicines = ({alternatives, prescribed}) => {
                         {row.composition}
                     </td>
                     <td>
-                    <FormGroup>
+                    
                       <FormControlLabel 
                       control={<Checkbox checked={checkedOptions.includes(row.title)}/>}  
                       value={row.title} 
                       onChange={handleChange}/>
-                    </FormGroup>
+                    
                     </td>
+                    {/* </FormGroup> */}
                     </tr>
                 ))}
                 {emptyRows > 0 && (
@@ -163,11 +165,16 @@ const GenericMedicines = ({alternatives, prescribed}) => {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                    <Button type='submit' variant="contained" >Submit</Button>
+                    {/* <form onSubmit={(e)=>{
+                      console.log("sahitya");
+                      handleSubmit(e);
+                    }}> */}
+                    <Button type='submit' variant="contained" onClick={handleSubmit}>Submit</Button>
+                    {/* </form> */}
                 </tr>
                 </tfoot>
             </table>
-          </form>
+          {/* </form> */}
         </Root>
         </ThemeProvider> : <div>Alternative submitted</div>}
     </div>
