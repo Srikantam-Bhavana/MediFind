@@ -21,9 +21,9 @@ const Disclaimer = () => {
             <Typography variant='h4' color='primary'> Terms and Conditions: </Typography>
             <form onSubmit={handleSubmit}>
                 <div style={{ paddingLeft:'25%',paddingTop:'5%',paddingBottom:'5%', justifyContent:'center', width:'50%', height: '50%'}}>
-                <Typography variant='h6'>Medical information: no medical advice; informations is not an alternative to medical advice; seeking medical advice for specific questions; immediate medical attention; never delay etc medical treatment.</Typography>
+                <Typography variant='h6'>no medical advice; informations is not an alternative to medical advice</Typography>
                 </div>
-                <FormControlLabel required control={<Checkbox />} label="By clicking here, I state that I have read and understood the terms and conditions" />
+                <FormControlLabel required control={<Checkbox />} label="By clicking here, I state that I have read, understood and agree to the terms and conditions" />
                 <br/>
                 <Button variant="contained" type="submit">Submit</Button>
             </form>
