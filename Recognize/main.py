@@ -60,18 +60,23 @@ def get_alternatives_for_medicine(search_term):
     matching_medicines = [
         medicine
         for medicine in medicines_data
-         if re.search(re.escape(search_term.lower()), medicine["title"].lower()) or
-        re.search(re.escape(search_term.lower()), medicine["composition"].lower())
+        if re.search(re.escape(search_term.lower()), medicine["title"].lower()) or
+        re.search(re.escape(search_term.lower()), medicine.get("composition", "").lower())
     ]
+    print("matching medicine", matching_medicines)
     if not matching_medicines:
-        return []  
-    first_match = matching_medicines[0]
-    composition_to_match = first_match.get("composition", "").lower()
-    alternatives = [
-        medicine
-        for medicine in medicines_data
-        if medicine.get("composition", "").lower() == composition_to_match
-    ]
+        return []
+    unique_compositions = set()  
+    alternatives = []
+    for matching_medicine in matching_medicines:
+        composition_to_match = matching_medicine.get("composition", "").lower()
+        if composition_to_match not in unique_compositions:
+            unique_compositions.add(composition_to_match)
+            alternatives.extend([
+                medicine
+                for medicine in medicines_data
+                if medicine.get("composition", "").lower() == composition_to_match
+            ])
     sorted_alternatives = sorted(alternatives, key=lambda x: float(x.get('cost', 0)))
     return sorted_alternatives
 if __name__ == '__main__':
