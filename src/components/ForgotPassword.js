@@ -1,5 +1,5 @@
 import React from 'react'
-import { database } from '../firebaseConfig';
+import { auth } from '../firebaseConfig';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { FormControl, InputLabel, Input } from '@mui/material';
@@ -13,7 +13,9 @@ const ForgotPassword = () => {
     const handleSubmit = async(e) =>{
         e.preventDefault();
         let emailval =  e.target.email.value;
-        sendPasswordResetEmail(database, emailval).then(data =>{
+        console.log(emailval);
+        sendPasswordResetEmail(auth, emailval).then(data =>{
+            console.log(data);
             alert("check your registered email inbox to reset the password")
         }).catch(err =>{
             alert(err.code)

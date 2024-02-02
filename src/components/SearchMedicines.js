@@ -38,6 +38,7 @@ const SearchMedicines = () => {
     }
 
     const handleSearch = async (e) => {
+      if(textBoxValue!==undefined){
         setSubmit(true)
         e.preventDefault();
         sessionStorage.setItem("medicines", JSON.stringify([textBoxValue]));
@@ -48,12 +49,15 @@ const SearchMedicines = () => {
         setAlternativesFound(Object.keys(response.data.alternatives).length);
         setAlternatives(response.data.alternatives);
         console.log(response.data.alternatives)
-        console.log("sahitya")
         if(alternativesFound>0){
           Object.keys(alternatives).map((medicine)=>{
             console.log(alternatives.medicine)
           })
         }
+      }
+      else{
+        alert("please enter a medicine")
+      }
     }
   return (
     <div>

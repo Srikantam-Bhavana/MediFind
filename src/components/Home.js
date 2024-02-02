@@ -77,7 +77,7 @@ const Home = () => {
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        <Button size="small" color="primary" onClick={() => history("/searchMedicine")}>
+                        <Button size="small" color="primary" onClick={() => {{alert("please type the medicine in search bar without any error")}history("/searchMedicine")}}>
                         Search
                         </Button>
                     </CardActions>
