@@ -25,9 +25,10 @@ const SearchMedicines = () => {
     const [alternativesFound, setAlternativesFound] = useState(0);
     const [submit, setSubmit] = useState(false);
     const history = useNavigate();
+    const token = localStorage.getItem('token');
 
   React.useEffect(()=>{
-    if(!sessionStorage.getItem("isLoggedIn")){
+    if(token === null){
       history("/");
     }
   })
@@ -57,6 +58,7 @@ const SearchMedicines = () => {
   return (
     <div>
         <Navbar/>
+        {token?
         <ThemeProvider theme={theme}>
             <div style={{padding:"2%"}}>
         <form onSubmit={(e) => handleSearch(e)}>
@@ -89,7 +91,7 @@ const SearchMedicines = () => {
             </div>: "generic medicines will be displayed here"}
 
             </div>
-        </ThemeProvider>
+        </ThemeProvider>: ""}
     </div>
   )
 }

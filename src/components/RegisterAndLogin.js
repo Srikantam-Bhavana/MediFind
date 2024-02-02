@@ -19,10 +19,6 @@ const RegisterAndLogin = () => {
 
     const history = useNavigate()
 
-    useEffect(()=>{
-        sessionStorage.setItem("isLoggedIn", false);
-    }, [])
-
     const handleSubmit = (e, type) =>{
         e.preventDefault();
         // console.log(e.target.email.value);
@@ -33,7 +29,8 @@ const RegisterAndLogin = () => {
             createUserWithEmailAndPassword(auth, email, password).then(data =>{
                 console.log(data.user.email, "authData");
                 sessionStorage.setItem('userEmail', data.user.email);
-                sessionStorage.setItem('isLoggedIn', true);
+                localStorage.setItem('token', data.user.accessToken);
+                localStorage.setItem('user', JSON.stringify(data.user));
                 history("/disclaimer");
             }).catch(err =>{
                 console.log(err.code);
@@ -48,7 +45,8 @@ const RegisterAndLogin = () => {
                 // console.log(data, "authData");
                 console.log(data.user.email, "authData");
                 sessionStorage.setItem('userEmail', data.user.email);
-                sessionStorage.setItem('isLoggedIn', true);
+                localStorage.setItem('token', data.user.accessToken);
+                localStorage.setItem('user', JSON.stringify(data.user));
                 history("/disclaimer");
             }).catch(err =>{
                 sessionStorage.setItem('isLoggedIn', false);

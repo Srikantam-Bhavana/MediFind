@@ -8,11 +8,13 @@ import Navbar from './Navbar';
 const FinalReceipt = () => {
     const givenMedicines = JSON.parse(sessionStorage.getItem("medicines"));
     const history = useNavigate();
-    useEffect(()=>{
-        if(!sessionStorage.getItem("isLoggedIn")){
-            history("/");
-        }
-    }, [])
+    const token = localStorage.getItem('token');
+
+  React.useEffect(()=>{
+    if(token === null){
+      history("/");
+    }
+  })
   return (
     <div>
   <Navbar />

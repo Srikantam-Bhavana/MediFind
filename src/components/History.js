@@ -12,9 +12,10 @@ import { useNavigate } from 'react-router-dom';
 const History = () => {
   const [history, setHistory] = useState([]);
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   useEffect(()=>{
-    if(!sessionStorage.getItem("isLoggedIn")){
+    if(token === null){
       navigate("/");
     }
     console.log("entered history");
@@ -44,7 +45,7 @@ const History = () => {
   return (
     <div>
       <Navbar />
-      <div style={{justifyItems:'center', justifyContent:'center', paddingLeft:'20%', paddingRight:'20%', padding:'3%'}}>
+      {token ? <div style={{justifyItems:'center', justifyContent:'center', paddingLeft:'20%', paddingRight:'20%', padding:'3%'}}>
         <ThemeProvider theme={theme}>
       <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -72,7 +73,7 @@ const History = () => {
       </Table>
     </TableContainer>
     </ThemeProvider>
-      </div>
+      </div>:""}
     </div>
   )
 }

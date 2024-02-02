@@ -19,9 +19,10 @@ const ReceiptAnalyzer = () => {
   const [alternatives, setAlternatives] = useState([]);
   const [alternativesFound, setAlternativesFound] = useState(0);
   const history = useNavigate();
+  const token = localStorage.getItem('token');
 
   React.useEffect(()=>{
-    if(!sessionStorage.getItem("isLoggedIn")){
+    if(token === null){
       history("/");
     }
   })
@@ -84,6 +85,8 @@ const ReceiptAnalyzer = () => {
   }
 
   return (
+    <div>
+    { token ? 
     <ThemeProvider theme={theme}>
     <div>
       <Navbar/>
@@ -136,6 +139,8 @@ const ReceiptAnalyzer = () => {
             </div>: "generic medicines will be displayed here"}
       </div>
       </ThemeProvider>
+      : ""} 
+      </div>
   );
 };
 

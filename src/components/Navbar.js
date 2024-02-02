@@ -31,11 +31,16 @@ function Navbar() {
   };
 
   const history = useNavigate()
-    const handleSignOut = () =>{
-      sessionStorage.removeItem("isLoggedIn");
-        signOut(auth).then(val =>{
+    const handleSignOut = async () =>{
+      try{
+        await signOut(auth).then(val =>{
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
           history('/')
         })
+      } catch(err){
+        console.log(err);
+      }
     }
 
   return (

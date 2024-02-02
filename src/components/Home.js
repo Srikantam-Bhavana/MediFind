@@ -16,12 +16,6 @@ import SearchImg from '../searchImage.jpg';
 const Home = () => {
     const history = useNavigate();
 
-    React.useEffect(()=>{
-        if(sessionStorage.getItem("isLoggedIn") === false){
-            history("/");
-        }
-    })
-
     return (
         <div>
             <Navbar/>

@@ -3,29 +3,32 @@ import { Button, TextField, Typography, Container } from '@mui/material';
 import theme from '../Styles/colorTheme';
 import { ThemeProvider } from '@emotion/react'
 import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebaseConfig';
+import { getFirestore, collection, addDoc} from 'firebase/firestore';
 
 const Feedback = () => {
   const [feedback, setFeedback] = useState('');
+  const token = localStorage.getItem('token');
+  const history = useNavigate();
+
+  React.useEffect(()=>{
+    if(token === null){
+      history("/");
+    }
+  })
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const userId = auth?.currentUser?.uid;
+    const db = getFirestore();
     const data = {
       feedback,
-      timestamp: new Date().toISOString() 
+      timestamp: new Date().toISOString(), 
+      userId:userId
     };
     try {
-      const response = await fetch('https://medifind-b308b-default-rtdb.firebaseio.com/feedback.json', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        console.log('Feedback added successfully');
-      } else {
-        console.error('Error adding feedback:', response.statusText);
-      }
+      const docRef = await addDoc(collection(db, 'feedback'), data);
+      console.log('Feedback added successfully with ID: ', docRef.id);
     } catch (error) {
       console.error('Error adding feedback:', error.message);
     }
@@ -34,8 +37,8 @@ const Feedback = () => {
   return (
     <ThemeProvider theme={theme}>
     <Navbar/>
-    <Container maxWidth="sm" style={{padding:"2%"}}>
-      <Typography variant="h4" gutterBottom>
+    {token? <Container maxWidth="sm" style={{padding:"2%"}}>
+      <Typography variant="h4" color="primary" gutterBottom>
         Feedback Form
       </Typography>
       <form onSubmit={handleSubmit}>
@@ -53,7 +56,7 @@ const Feedback = () => {
           Submit Feedback
         </Button>
       </form>
-    </Container>
+    </Container>: " "}
     </ThemeProvider>
   );
 };
