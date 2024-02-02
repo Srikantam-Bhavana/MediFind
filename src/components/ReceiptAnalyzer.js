@@ -25,7 +25,7 @@ const ReceiptAnalyzer = () => {
     if(token === null){
       history("/");
     }
-  })
+  }, [])
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -39,6 +39,11 @@ const ReceiptAnalyzer = () => {
         return;
       }
       setAnalyze(true)
+      setprescribedItems([]);
+      setCheckedOptions([]);
+      setSubmit(false);
+      setAlternatives([]);
+      setAlternativesFound(0);
       const formData = new FormData();
       formData.append('file', selectedFile);
 
@@ -46,8 +51,10 @@ const ReceiptAnalyzer = () => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+
       });
-      setprescribedItems(response.data.items);  
+      setprescribedItems(response.data.items); 
+      
       
     } catch (error) {
       setAnalyze(false)

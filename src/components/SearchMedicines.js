@@ -45,6 +45,8 @@ const SearchMedicines = () => {
         const obj = {
             "medicines": [textBoxValue],
         };
+        setAlternativesFound(0);
+        setAlternatives([]);
         const response = await axios.post("http://localhost:8000/api/searchAlternativesFromPrescription", obj);
         setAlternativesFound(Object.keys(response.data.alternatives).length);
         setAlternatives(response.data.alternatives);

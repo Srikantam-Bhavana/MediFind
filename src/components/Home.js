@@ -15,6 +15,13 @@ import SearchImg from '../searchImage.jpg';
  
 const Home = () => {
     const history = useNavigate();
+    const token = localStorage.getItem('token');
+
+    React.useEffect(()=>{
+      if(token === null){
+        history("/");
+      }
+    })
 
     return (
         <div>
