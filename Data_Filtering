@@ -1,0 +1,151 @@
+import pandas as pd
+import re
+
+# Load both Excel files
+excel_one = pd.read_excel("C:\\Users\\admin\\Downloads\\PMBJP.xlsx")
+excel_two = pd.read_excel("C:\\Users\\admin\\Downloads\\Merged.xlsx")
+
+# Get the unique Generic Names from Excel One
+generic_names = excel_one['Generic Name of the Medicine'].unique()
+
+# Function to remove numbers from a string
+def remove_numbers(text):
+    return re.sub(r'\d+', '', text)
+
+# Function to check if a generic name is present in title or composition
+def check_generic_name(row):
+    for name in generic_names:
+        if name.lower() in remove_numbers(str(row['Title'])).lower() or name.lower() in remove_numbers(str(row['Composition'])).lower():
+            return True
+    return False
+
+# Apply the function to filter rows in Excel Two
+filtered_excel_two = excel_two[excel_two.apply(check_generic_name, axis=1)]
+
+# Write the filtered data to a new Excel file
+filtered_excel_two.to_excel('filtered_output.xlsx', index=False)
+
+
+import pandas as pd
+import re
+
+
+# Load both Excel files
+excel_one = pd.read_excel("C:\\Users\\admin\\Downloads\\output_file.xlsx")
+excel_two = pd.read_excel("C:\\Users\\admin\\Downloads\\Merged.xlsx")
+
+# Get the unique Generic Names from Excel One
+generic_names = excel_one['Generic Name'].dropna().astype(str).unique()
+
+# Function to remove numbers from a string
+def remove_numbers(text):
+    return re.sub(r'\d+', '', text)
+
+# Function to check if a generic name is present in title or composition
+def check_generic_name(row):
+    title = remove_numbers(str(row['Title'])) if pd.notna(row['Title']) else ''
+    composition = remove_numbers(str(row['Composition'])) if pd.notna(row['Composition']) else ''
+    for name in generic_names:
+        if name.lower() in title.lower() or name.lower() in composition.lower():
+            return True
+    return False
+
+# Apply the function to filter rows in Excel Two
+filtered_excel_two = excel_two[excel_two.apply(check_generic_name, axis=1)]
+
+# Write the filtered data to a new Excel file
+filtered_excel_two.to_excel('filtered_output1.xlsx', index=False)
+
+
+import pandas as pd
+
+# Read the Excel file
+df = pd.read_excel('C:\\Users\\admin\\Downloads\\PMBJP.xlsx')
+
+# Function to extract first word from a string
+def extract_first_word(text):
+    if pd.isna(text):
+        return text
+    return text.split()[0]
+
+# Apply the function to the specified column
+df['Generic Name'] = df['Generic Name of the Medicine'].apply(extract_first_word)
+
+# Drop the original column if needed
+df = df.drop(columns=['Generic Name of the Medicine'])
+
+# Write back to a new Excel file
+df.to_excel('output_file.xlsx', index=False)
+
+
+import pandas as pd
+
+# Read the Excel file
+df = pd.read_excel('C:\\Users\\admin\\Downloads\\filtered_output1.xlsx')
+
+# Filter rows that do not contain the symbol '+'
+df = df[~df.apply(lambda row: row.astype(str).str.contains('+').any(), axis=1)]
+
+# Write the filtered data to a new Excel file
+df.to_excel('cleaned_output_file.xlsx', index=False)
+
+
+import pandas as pd
+
+# Read the Excel file
+df = pd.read_excel('C:\\Users\\admin\\Downloads\\filtered_output1.xlsx')
+
+# Filter rows that do not contain the symbol '+'
+df = df[~df.apply(lambda row: row.astype(str).str.contains(r'\+').any(), axis=1)]
+
+# Write the filtered data to a new Excel file
+df.to_excel('cleaned_output_file.xlsx', index=False)
+
+
+import pandas as pd
+
+# Read the Excel file
+excel_file = 'C:\\Users\\admin\\Downloads\\Final_data_medifind.xlsx'
+df = pd.read_excel(excel_file)
+
+# Remove duplicates and keep the first occurrence
+df_unique = df.drop_duplicates()
+
+# Save the unique data to a new Excel file
+output_file = "path_to_output_file.xlsx"
+df_unique.to_excel(output_file_clean, index=False)
+
+print("Duplicates removed. Unique data saved to:", output_file)
+
+
+import pandas as pd
+
+# Read the Excel file
+excel_file = 'C:\\Users\\admin\\Downloads\\Final_data_medifind.xlsx'
+df = pd.read_excel(excel_file)
+
+# Remove duplicates and keep the first occurrence
+df_unique = df.drop_duplicates()
+
+# Save the unique data to the same Excel file, overwriting the original
+df_unique.to_excel(excel_file, index=False)
+
+print("Duplicates removed. Unique data saved to:", excel_file)
+
+
+import pandas as pd
+
+# Read the Excel file
+excel_file = "C:\\Users\\admin\\Downloads\\Final_data_medifind.xlsx"
+df = pd.read_excel(excel_file)
+
+df = df.drop_duplicates('Title', keep='last')
+
+
+# Specify a different output path
+output_file = "path.xlsx"
+df.to_excel(output_file, index=False)
+
+print("Duplicate rows based on 'Title' removed. Unique data saved to:", output_file)
+
+
